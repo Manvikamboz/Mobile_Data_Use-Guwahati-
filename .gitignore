@@ -1,0 +1,32 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# MLflow run artifacts (SQLite database mlflow.db is committed; local artifact directories are not)
+mlruns/
+mlartifacts/
+
+# Raw datasets tracked by DVC (do not commit CSVs directly to Git)
+data/raw/train.csv
+data/raw/later.csv
+
+# Keep .gitkeep files tracked
+!.gitkeep
