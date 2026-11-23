@@ -28,5 +28,8 @@ mlartifacts/
 data/raw/train.csv
 data/raw/later.csv
 
+# Processed datasets (do not commit generated data to Git)
+data/processed/*.csv
+
 # Keep .gitkeep files tracked
 !.gitkeep

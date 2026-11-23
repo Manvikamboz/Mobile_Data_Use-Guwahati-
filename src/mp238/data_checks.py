@@ -165,7 +165,7 @@ def run_all(train_raw, later, holdout, params):
 def write_findings(data_issues, path):
     """
     Writes data_issues into findings.yaml at the given path.
-    Preserves group_id, problem_id, tracking, and monitoring sections intact.
+    Preserves group_id, problem_id, tracking, and monitoring sections.
     """
     path = Path(path)
     if path.exists():
@@ -193,5 +193,5 @@ if __name__ == "__main__":
     for k, v in issues.items():
         print(f"  {k}: {v}")
 
-    # write_findings(issues, findings_path)
-    # print(f"\nSuccessfully wrote data issues to {findings_path}")
+    write_findings(issues, findings_path)
+    print(f"\nSuccessfully wrote data issues to {findings_path}")
