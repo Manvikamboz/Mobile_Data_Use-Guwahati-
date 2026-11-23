@@ -1,1 +1,20 @@
-
+paths:
+  train: data/raw/train.csv
+  later: data/raw/later.csv
+  holdout: data/raw/holdout_features.csv
+  findings: reports/findings.yaml
+target: gb_per_day
+date_col: date
+group_col: circle
+text_cols:
+  - phone_tier
+  - circle
+numeric_cols:
+  - age
+  - screen_hours
+  - apps_installed
+  - plan_gb_limit
+  - video_minutes
+  - wifi_hours
+leak_corr_threshold: 0.95
+stuck_min_run: 20
