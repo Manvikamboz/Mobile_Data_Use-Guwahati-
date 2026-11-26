@@ -8,7 +8,7 @@ from typing import Any, Dict
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from contextlib import asynccontextmanager
 
 
@@ -95,6 +95,7 @@ def get_model():
 #   2. apps_installed below 5 is always a typing mistake. Reject it. (ge=5)
 # ---------------------------------------------------------------------------
 class PredictRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     age: float = Field(..., description="Customer age in years")
     screen_hours: float = Field(..., description="Screen time in hours")
     apps_installed: int = Field(
