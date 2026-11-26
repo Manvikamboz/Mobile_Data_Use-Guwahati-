@@ -9,6 +9,8 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from contextlib import asynccontextmanager
+
 
 # ---------------------------------------------------------------------------
 # Structured JSON Logging Setup
@@ -38,32 +40,51 @@ if not logger.handlers:
     stream_handler.setFormatter(JsonFormatter())
     logger.addHandler(stream_handler)
 logger.propagate = False
+ 
+ 
+ROOT_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_MODEL_PATH = ROOT_DIR / "models" / "model.joblib"
 
-# ---------------------------------------------------------------------------
-# FastAPI Application & Model Resolution
-# ---------------------------------------------------------------------------
+_model = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global _model
+
+    if not DEFAULT_MODEL_PATH.exists():
+        raise RuntimeError(
+            "Model file not found: models/model.joblib"
+        )
+
+    _model = joblib.load(DEFAULT_MODEL_PATH)
+
+    logger.info(
+        "Model loaded successfully",
+        extra={
+            "extra_data": {
+                "event": "model_loaded"
+            }
+        }
+    )
+
+    yield
+
+    _model = None
+
+
 app = FastAPI(
     title="MP238 Mobile Data Use Prediction Service",
     description="Predicts daily mobile data use (gb_per_day) for Guwahati Telecom Circle Office",
     version="1.0.0",
+    lifespan=lifespan,
 )
-
-ROOT_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_MODEL_PATH = ROOT_DIR / "models" / "model.joblib"
-_model = None
 
 
 def get_model():
-    """Lazy load or return the trained champion pipeline."""
     global _model
-    if _model is None:
-        if DEFAULT_MODEL_PATH.exists():
-            _model = joblib.load(DEFAULT_MODEL_PATH)
-        else:
-            logger.warning(
-                "Model file not found at expected path",
-                extra={"extra_data": {"expected_path": str(DEFAULT_MODEL_PATH)}},
-            )
+    if _model is None and DEFAULT_MODEL_PATH.exists():
+        _model = joblib.load(DEFAULT_MODEL_PATH)
     return _model
 
 
