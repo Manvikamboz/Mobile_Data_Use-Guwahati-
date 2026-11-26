@@ -7,6 +7,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
 # Virtual environments
 .env
@@ -18,3 +19,16 @@ ENV/
 # IDEs
 .idea/
 .vscode/
+
+# DVC and Raw Data (data files must not be copied into the container)
+.dvc/
+.dvcignore
+data/
+
+# Tests & caches
+tests/
+.pytest_cache/
+
+# MLflow run artifacts and databases
+mlruns/
+mlartifacts/
